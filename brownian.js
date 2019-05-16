@@ -38,24 +38,34 @@ class Brownian {
   }
   
   push(particle) { 
+    // Расстояние между частицами
     let deltaR = particle.pos.copy().sub(this.pos);
     if(deltaR.mag() < this.r){
-      particle.pos.set(this.pos.copy().add(deltaR.setMag(this.r)));
-      let va = particle.vel.mag();
-      let ma = particle.mass;
-      let vb = this.vel.mag();
-      let mb = this.mass;
-      let vaf = ((ma - mb)/(ma + mb)) * va + ((2 * mb)/(ma + mb)) * vb;
-      let vbf = ((2 * ma)/(ma + mb)) * va + ((mb - ma)/(ma + mb)) * vb;
-      // console.log(abs(vaf) - abs(va));
-      // console.log(degrees());
-      let deltaA = 180 - particle.vel.angleBetween(deltaR);
-      // console.log(deltaA);
-      particle.vel.rotate(deltaA);
-      // particle.vel.mag(vaf);
-      this.vel.rotate(-deltaA);
-      this.vel.setMag(vbf);
-      particle.vel.setMag(vaf);
+      particle.pos.set(this.pos.copy().add(deltaR.copy().setMag(this.r)));
+
+      let v1 = this.vel.copy();
+      let v2 = particle.vel.copy();
+
+      // нормальная составляющая вектора расстояния
+      let n = deltaR.normalize();
+
+      // Проекции вектора скорости на вектор n 
+      const a1 = v1.copy().dot(n);
+      const a2 = v2.copy().dot(n);
+
+      // optP =  2(a1 - a2)
+      //         -----------
+      //           m1 + m2
+      const optP = (2.0 * (a1 - a2)) / (this.mass + particle.mass);
+
+      // v1' = v1 - optP * m2 * n
+      const v1_ = v1.sub(n.mult(optP * particle.mass));
+
+      // v2' = v2 + optP * m1 * n
+      const v2_ = v2.add(n.mult(optP * this.mass));
+
+      this.vel = v1_;
+      particle.vel = v2_; 
     }
   }
 }
