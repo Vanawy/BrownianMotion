@@ -8,6 +8,8 @@ let particles;
 let cbVelocity;
 let cbParticles;
 let rsBg;
+let paragraphEnergy;
+
 
 function setup() {
   createCanvas(400, 400);
@@ -24,6 +26,7 @@ function setup() {
   cbParticles = createCheckbox('show particles', true);
   cbVelocity = createCheckbox('show velocity', false);
   rsBg = createSlider(0, 255, 60);
+  paragraphEnergy = createP('Total energy = ');
 }
 
 function draw() {
@@ -36,6 +39,10 @@ function draw() {
     particles.forEach((p, i) => {p.draw()});
   }
   drawFps();
+
+  let totalEnergy = brownian.mass * Math.pow(brownian.vel.mag(), 2) / 2;
+  particles.forEach((p, i) => {totalEnergy += p.mass * Math.pow(p.vel.mag(), 2) / 2});
+  paragraphEnergy.html('E = ' + totalEnergy.toFixed(2));
 }
 
 function getInputs() {
