@@ -1,32 +1,50 @@
+
 let cfg = {
   particlesCount: 100,
-  showVelocity: false,
-  showParticles: false,
+  showVelocity: true,
+  showParticles: true,
 };
-let brownian;
-let particles;
+let canvas;
+
 let cbVelocity;
 let cbParticles;
 let rsBg;
 let paragraphEnergy;
 
+let brownian;
+let particles;
+let walls;
+
+let world;
 
 function setup() {
   createCanvas(400, 400);
+  
+  world = createWorld();
+
+  walls = [
+    new Wall(width / 2, -50, width + 100, 100),
+    new Wall(width / 2, height + 50, width + 100, 100),
+    new Wall(-50, height / 2, 100, height + 100),
+    new Wall(width + 50, height / 2, 100, height + 100),
+  ];
+
   noStroke();
   angleMode(DEGREES);
-  particles = [];
-  direction = createVector(0, 0);
+  rectMode(CENTER);
   
   brownian = new Brownian(cfg);
+  particles = [];
   for(let i = 0; i < cfg.particlesCount; i++){
-    particles[i] = new Particle(cfg); 
+    particles[i] = new Particle(); 
   }
+
   createP('Configurations');
-  cbParticles = createCheckbox('show particles', true);
-  cbVelocity = createCheckbox('show velocity', false);
-  rsBg = createSlider(0, 255, 60);
-  paragraphEnergy = createP('Total energy = ');
+  cbParticles = createCheckbox('show particles', cfg.showParticles);
+  cbVelocity = createCheckbox('show velocity', cfg.showVelocity);
+  rsBg = createSlider(0, 255, 255);
+  paragraphEnergy = createP('');
+
 }
 
 function draw() {
@@ -34,14 +52,16 @@ function draw() {
   update(getDeltaTime());
   background(220, cfg.backgroundAlpha);
   
-  brownian.draw();
+  // brownian.draw();
   if(cfg.showParticles){
     particles.forEach((p, i) => {p.draw()});
   }
-  drawFps();
+  walls.forEach((w, i) => {w.draw()});
 
-  let totalEnergy = brownian.mass * Math.pow(brownian.vel.mag(), 2) / 2;
-  particles.forEach((p, i) => {totalEnergy += p.mass * Math.pow(p.vel.mag(), 2) / 2});
+  drawFps();
+  let totalEnergy = 0;
+  // let totalEnergy = brownian.mass * Math.pow(brownian.vel.mag(), 2) / 2;
+  particles.forEach((p, i) => {totalEnergy += p.mass * Math.pow(p.speed, 2) / 2});
   paragraphEnergy.html('E = ' + totalEnergy.toFixed(2));
 }
 
@@ -52,19 +72,19 @@ function getInputs() {
 }
 
 function update(dt) {
-  particles.forEach((p, i) => {p.update(dt)});
-  particles.forEach((p, i) => {brownian.push(p)});
-  brownian.update(dt);
+  let timeStep = 1.0 / 30;
+  // 2nd and 3rd arguments are velocity and position iterations
+  world.Step(timeStep, 10, 10);
 }
 
 function getDeltaTime() {
-  return frameRate() != 0 ? max(1/frameRate(), 0.1) : 0.1;
+  return (frameRate() != 0 ? max(1/frameRate(), 0.1) : 0.1) * 1000;
 }
 
 function drawFps() {
   push();
   fill(0);
-  rect(0,0, 20, 10);
+  rect(10,5, 20, 10);
   fill('#0f0');
   textAlign(LEFT, TOP);
   text(""+frameRate().toFixed(0), 0, 0);
