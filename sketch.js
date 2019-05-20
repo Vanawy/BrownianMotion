@@ -50,17 +50,17 @@ function draw() {
   update(getDeltaTime());
   background(220, cfg.backgroundAlpha);
   
-  // brownian.draw();
+  brownian.draw();
   if(cfg.showParticles){
     particles.forEach((p, i) => {p.draw()});
   }
   walls.forEach((w, i) => {w.draw()});
 
   drawFps();
-  let totalEnergy = 0;
+  // let totalEnergy = 0;
   // let totalEnergy = brownian.mass * Math.pow(brownian.vel.mag(), 2) / 2;
-  particles.forEach((p, i) => {totalEnergy += p.mass * Math.pow(p.speed, 2) / 2});
-  paragraphEnergy.html('E = ' + totalEnergy.toFixed(2));
+  // particles.forEach((p, i) => {totalEnergy += p.mass * Math.pow(p.speed, 2) / 2});
+  // paragraphEnergy.html('E = ' + totalEnergy.toFixed(2));
 }
 
 function getInputs() {
