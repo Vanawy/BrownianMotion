@@ -1,21 +1,22 @@
 
 // Constants
-const PARTICLE_RADIUS = 5;
-const PARTICLE_MASS = 10;
-const PARTICLE_MAX_SPEED = 10;
-const PARTICLE_COLOR = "#f14b7d";
 
 class Particle {
-  get radius(){ return PARTICLE_RADIUS; }
-  get mass(){ return PARTICLE_MASS; }
   get vel(){ return this.body.GetLinearVelocity(); }
   get speed(){ return this.body.GetLinearVelocity().GetLength(); }
   
-  constructor() {
+  constructor(options = {radius: 5, color: "#f14b7d", maxSpeed: 10}) {
     let pos = new createVector(random(width), random(height));
 
-    let vel = new box2d.b2Vec2(random(PARTICLE_MAX_SPEED), 0);
+
+    this.radius = options.radius;
+    this.color = options.color;
+    this.maxSpeed = options.maxSpeed;
+    
+    let vel = new box2d.b2Vec2(random(this.maxSpeed), 0);
     let angle = random(TWO_PI);
+    vel.SelfRotateRadians(angle);
+
     
     // Body.setVelocity(this.body, vel);
     // Body.setAngle(this.body, random(TWO_PI));
@@ -29,7 +30,7 @@ class Particle {
     let fd = new box2d.b2FixtureDef();
     // Fixture holds shape
     fd.shape = new box2d.b2CircleShape();
-    fd.shape.m_radius = scaleToWorld(PARTICLE_RADIUS);
+    fd.shape.m_radius = scaleToWorld(this.radius);
 
     // Some physics
     fd.density = 1.0;
@@ -49,13 +50,13 @@ class Particle {
   draw() {
     push();
     noStroke();
-    fill(PARTICLE_COLOR);
+    fill(this.color);
 
     let pos = scaleToPixels(this.body.GetPosition());
     let angle = this.body.GetAngleRadians();
     let velocity = scaleToPixels(this.body.GetLinearVelocity());
     translate(pos.x, pos.y);
-    ellipse(0, 0,  PARTICLE_RADIUS * 2);
+    ellipse(0, 0,  this.radius * 2);
     stroke(0);
     if(cfg.showVelocity){
       line(velocity.x, velocity.y, 0, 0);

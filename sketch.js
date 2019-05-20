@@ -33,7 +33,7 @@ function setup() {
   angleMode(DEGREES);
   rectMode(CENTER);
   
-  brownian = new Brownian(cfg);
+  brownian = new Brownian();
   particles = [];
   for(let i = 0; i < cfg.particlesCount; i++){
     particles[i] = new Particle(); 
@@ -52,7 +52,7 @@ function draw() {
   update(getDeltaTime());
   background(220, cfg.backgroundAlpha);
   
-  // brownian.draw();
+  brownian.draw();
   if(cfg.showParticles){
     particles.forEach((p, i) => {p.draw()});
   }
