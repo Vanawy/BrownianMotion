@@ -4,8 +4,11 @@ class Particle {
   get speed(){ return this.body.GetLinearVelocity().GetLength(); }
   
   constructor(options = {radius: 5, color: "#f14b7d", maxSpeed: 10}) {
-    let pos = new createVector(random(width), random(height));
-
+    
+    let pos = new createVector(
+      options.x ? options.x : random(width), 
+      options.y ? options.y : random(height)
+    );
 
     this.radius = options.radius;
     this.color = options.color;

@@ -6,8 +6,9 @@ class Brownian extends Particle {
       radius: 50,
       color: "#8ef3ff",
       maxSpeed: 0,
+      x: width / 2,
+      y: height / 2,
     }, ...options});
-    console.log(this.body);
   }
 
  
