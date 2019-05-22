@@ -2,27 +2,42 @@
 class Brownian extends Particle {
 
   constructor(options) {
-    super({...{
-      radius: 50,
-      color: "#8ef3ff",
-      maxSpeed: 0,
-      x: width / 2,
-      y: height / 2,
-    }, ...options});
+
+    options = {
+      ...{
+        radius: 30,
+        color: "#8ef3ff",
+        initialSpeed: 0,
+        x: width / 2,
+        y: height / 2,
+        traceColor : "#250d59",
+      }, 
+      ...options
+    };
+    super(options);
+    this.traceColor = options.traceColor;
+    this.trace = [];
+    this.trace.push(this.pos);
   }
 
- 
-  
-  // draw() {
-  //   push();
-  //   noStroke();
-  //   fill(BROWNIAN_COLOR);
-  //   translate(this.pos.x, this.pos.y);
-  //   ellipse(0, 0,  this.r * 2);
-  //   stroke(0);
-  //   if(this.cfg.showVelocity){
-  //     line(this.vel.x, this.vel.y, 0, 0);
-  //   }
-  //   pop();
-  // }
+  draw() {
+    super.draw();
+
+    if(frameCount % 60 == 0) {
+      this.trace.push(this.pos);
+    }
+  }
+
+  // Draw trace of brownian particle
+  drawTrace() {
+    push();
+    stroke(this.traceColor);
+    const pointsCount = this.trace.length;
+    for(let i = 1; i < pointsCount; i++){
+      line(this.trace[i].x, this.trace[i].y, this.trace[i - 1].x, this.trace[i - 1].y);
+    }
+    line(this.trace[pointsCount - 1].x, this.trace[pointsCount - 1].y, this.pos.x, this.pos.y)
+    pop();
+  }
+
 }

@@ -1,5 +1,5 @@
 let cfg = {
-  particlesCount: 100,
+  particlesCount: 300,
   showVelocity: true,
   showParticles: true,
 };
@@ -7,7 +7,6 @@ let canvas;
 
 let cbVelocity;
 let cbParticles;
-let rsBg;
 let paragraphEnergy;
 
 let brownian;
@@ -40,7 +39,7 @@ function setup() {
   createP('Configurations');
   cbParticles = createCheckbox('show particles', cfg.showParticles);
   cbVelocity = createCheckbox('show velocity', cfg.showVelocity);
-  rsBg = createSlider(0, 255, 255);
+  rsStep = createSlider(0, 255, 60);
   paragraphEnergy = createP('');
 
 }
@@ -48,13 +47,14 @@ function setup() {
 function draw() {
   getInputs();
   update(getDeltaTime());
-  background(220, cfg.backgroundAlpha);
+  background(220, 255);
   
-  brownian.draw();
   if(cfg.showParticles){
     particles.forEach((p, i) => {p.draw()});
   }
   walls.forEach((w, i) => {w.draw()});
+  brownian.draw(cfg);
+  brownian.drawTrace();
 
   drawFps();
   // let totalEnergy = 0;
@@ -66,7 +66,7 @@ function draw() {
 function getInputs() {
   cfg.showVelocity = cbVelocity.checked();
   cfg.showParticles = cbParticles.checked();
-  cfg.backgroundAlpha = rsBg.value();
+  cfg.traceStep = rsStep.value();
 }
 
 function update(dt) {

@@ -16,12 +16,12 @@ class Wall {
     bd.position.x = scaleToWorld(this.x);
     bd.position.y = scaleToWorld(this.y);
     fd.shape = new box2d.b2PolygonShape();
-    fd.shape.SetAsBox(this.w / (scaleFactor * 2), this.h / (scaleFactor * 2));
+    fd.shape.SetAsBox(scaleToWorld(this.w)/2, scaleToWorld(this.h)/2);
     this.body = world.CreateBody(bd).CreateFixture(fd);
   }
 
   draw() {
-    fill(127);
+    fill(100);
     stroke(0);
     rectMode(CENTER);
     rect(this.x, this.y, this.w, this.h);

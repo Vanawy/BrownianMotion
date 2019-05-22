@@ -3,8 +3,15 @@ class Particle {
   get vel(){ return this.body.GetLinearVelocity(); }
   get speed(){ return this.body.GetLinearVelocity().GetLength(); }
   
-  constructor(options = {radius: 5, color: "#f14b7d", maxSpeed: 10}) {
-    
+  constructor(options = {}) {
+    options = {
+      ...{
+        radius: 5, 
+        color: "#f14b7d", 
+        initialSpeed: 10
+      }, 
+      ...options
+    };
     let pos = new createVector(
       options.x ? options.x : random(width), 
       options.y ? options.y : random(height)
@@ -12,15 +19,13 @@ class Particle {
 
     this.radius = options.radius;
     this.color = options.color;
-    this.maxSpeed = options.maxSpeed;
+    this.initialSpeed = options.initialSpeed;
+    this.pos = {x: pos.x, y: pos.y };
     
-    let vel = new box2d.b2Vec2(random(this.maxSpeed), 0);
+    // Define initial velocity of the body
+    let vel = new box2d.b2Vec2(random(this.initialSpeed), 0);
     let angle = random(TWO_PI);
     vel.SelfRotateRadians(angle);
-
-    
-    // Body.setVelocity(this.body, vel);
-    // Body.setAngle(this.body, random(TWO_PI));
 
     // Define a body
     let bd = new box2d.b2BodyDef();
@@ -42,10 +47,8 @@ class Particle {
     this.body = world.CreateBody(bd);
     // Attach the fixture
     this.body.CreateFixture(fd);
-
-    // Some additional stuff
+    // Set initial velocity
     this.body.SetLinearVelocity(vel);
-    // this.body.SetAngularVelocity(angle);
   }
   
   draw() {
@@ -54,6 +57,7 @@ class Particle {
     fill(this.color);
 
     let pos = scaleToPixels(this.body.GetPosition());
+    this.pos = {x: pos.x, y: pos.y };
     let angle = this.body.GetAngleRadians();
     let velocity = scaleToPixels(this.body.GetLinearVelocity());
     translate(pos.x, pos.y);
