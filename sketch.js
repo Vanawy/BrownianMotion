@@ -1,6 +1,6 @@
 let cfg = {
   particlesCount: 300,
-  showVelocity: true,
+  showVelocity: false,
   showParticles: true,
 };
 let canvas;
@@ -14,17 +14,21 @@ let particles;
 let walls;
 
 let world;
+let traceGraphics;
 
 function setup() {
   createCanvas(400, 400);
+  traceGraphics = createGraphics(400 , 400);
+  traceGraphics.clear();
   
   world = createWorld();
 
+  const wallThickness = 100;
   walls = [
-    new Wall(width / 2, -50, width + 100, 100),
-    new Wall(width / 2, height + 50, width + 100, 100),
-    new Wall(-50, height / 2, 100, height + 100),
-    new Wall(width + 50, height / 2, 100, height + 100),
+    new Wall(width / 2, -wallThickness / 2, width + wallThickness, wallThickness),
+    new Wall(width / 2, height + wallThickness / 2, width + wallThickness, wallThickness),
+    new Wall(-wallThickness / 2, height / 2, wallThickness, height + wallThickness),
+    new Wall(width + wallThickness / 2, height / 2, wallThickness, height + wallThickness),
   ];
 
   noStroke();
@@ -39,7 +43,6 @@ function setup() {
   createP('Configurations');
   cbParticles = createCheckbox('show particles', cfg.showParticles);
   cbVelocity = createCheckbox('show velocity', cfg.showVelocity);
-  rsStep = createSlider(0, 255, 60);
   paragraphEnergy = createP('');
 
 }
@@ -53,20 +56,16 @@ function draw() {
     particles.forEach((p, i) => {p.draw()});
   }
   walls.forEach((w, i) => {w.draw()});
-  brownian.draw(cfg);
-  brownian.drawTrace();
+  brownian.draw();
+  brownian.drawTrace(traceGraphics);
 
+  image(traceGraphics, 0, 0);
   drawFps();
-  // let totalEnergy = 0;
-  // let totalEnergy = brownian.mass * Math.pow(brownian.vel.mag(), 2) / 2;
-  // particles.forEach((p, i) => {totalEnergy += p.mass * Math.pow(p.speed, 2) / 2});
-  // paragraphEnergy.html('E = ' + totalEnergy.toFixed(2));
 }
 
 function getInputs() {
   cfg.showVelocity = cbVelocity.checked();
   cfg.showParticles = cbParticles.checked();
-  cfg.traceStep = rsStep.value();
 }
 
 function update(dt) {

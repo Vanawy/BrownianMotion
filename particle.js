@@ -8,7 +8,7 @@ class Particle {
       ...{
         radius: 5, 
         color: "#f14b7d", 
-        initialSpeed: 10
+        initialSpeed: 20
       }, 
       ...options
     };
@@ -23,7 +23,7 @@ class Particle {
     this.pos = {x: pos.x, y: pos.y };
     
     // Define initial velocity of the body
-    let vel = new box2d.b2Vec2(random(this.initialSpeed), 0);
+    let vel = new box2d.b2Vec2(randomGaussian(this.initialSpeed, this.initialSpeed * 0.3), 0);
     let angle = random(TWO_PI);
     vel.SelfRotateRadians(angle);
 
