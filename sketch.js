@@ -1,11 +1,13 @@
 let cfg = {
   particlesCount: 300,
-  showVelocity: false,
+  showTrace: true,
   showParticles: true,
+  showFPS: true,
 };
 let canvas;
 
-let cbVelocity;
+let cbTrace;
+let cbFPS;
 let cbParticles;
 let paragraphEnergy;
 
@@ -42,7 +44,8 @@ function setup() {
   }
   createP('Configurations');
   cbParticles = createCheckbox('show particles', cfg.showParticles);
-  cbVelocity = createCheckbox('show velocity', cfg.showVelocity);
+  cbTrace = createCheckbox('show trace', cfg.showTrace);
+  cbFPS= createCheckbox('show FPS', cfg.showFPS);
   paragraphEnergy = createP('');
 
 }
@@ -59,13 +62,18 @@ function draw() {
   brownian.draw();
   brownian.drawTrace(traceGraphics);
 
-  image(traceGraphics, 0, 0);
-  drawFps();
+  if(cfg.showTrace){
+    image(traceGraphics, 0, 0);
+  }
+  if(cfg.showFPS){
+    drawFps();
+  }
 }
 
 function getInputs() {
-  cfg.showVelocity = cbVelocity.checked();
+  cfg.showTrace = cbTrace.checked();
   cfg.showParticles = cbParticles.checked();
+  cfg.showFPS = cbFPS.checked();
 }
 
 function update(dt) {

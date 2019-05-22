@@ -62,10 +62,6 @@ class Particle {
     let velocity = scaleToPixels(this.body.GetLinearVelocity());
     translate(pos.x, pos.y);
     ellipse(0, 0,  this.radius * 2);
-    stroke(0);
-    if(cfg.showVelocity){
-      line(velocity.x, velocity.y, 0, 0);
-    }
     pop();
   }
 }
