@@ -42,10 +42,10 @@ function setup() {
   for(let i = 0; i < cfg.particlesCount; i++){
     particles[i] = new Particle(); 
   }
-  createP('Configurations');
-  cbParticles = createCheckbox('show particles', cfg.showParticles);
-  cbTrace = createCheckbox('show trace', cfg.showTrace);
-  cbFPS= createCheckbox('show FPS', cfg.showFPS);
+  createP('Настройки');
+  cbParticles = createCheckbox('Показывать частицы', cfg.showParticles);
+  cbTrace = createCheckbox('Показывать путь', cfg.showTrace);
+  cbFPS= createCheckbox('Показывать FPS', cfg.showFPS);
   paragraphEnergy = createP('');
 
 }
